@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | Smart Attendance</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Smart Attendance Dashboard</h1>
+
+        <nav class="faculty-nav">
+            <a href="faculty-dashboard.html" class="active">Dashboard</a>
+            <a href="students.html">Students</a>
+            <a href="attendance.html">Mark Attendance</a>
+            <a href="reports.html">Reports</a>
+            <a href="index.html">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>Faculty Dashboard</h2>
+            <p>Welcome, Faculty!</p>
+            <p class="welcome-message">
+                Manage student attendance and view attendance reports in one place.
+            </p>
+        </section>
+
+        <!-- Today's Attendance Overview -->
+        <section class="attendance-cards">
+
+            <div class="attendance-card total-card">
+                <h4>Total Students</h4>
+                <p id="facultyTotalStudents">0</p>
+            </div>
+
+            <div class="attendance-card present-card">
+                <h4>Present Today</h4>
+                <p id="facultyPresentToday">0</p>
+            </div>
+
+            <div class="attendance-card absent-card">
+                <h4>Absent Today</h4>
+                <p id="facultyAbsentToday">0</p>
+            </div>
+
+            <div class="attendance-card late-card">
+                <h4>Late Today</h4>
+                <p id="facultyLateToday">0</p>
+            </div>
+
+        </section>
+
+        <!-- Recent Attendance Activity -->
+        <section class="dashboard-section">
+            <h3>Recent Attendance Activity</h3>
+
+            <table class="subject-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recentAttendanceBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Overall Attendance Summary -->
+        <section class="dashboard-section">
+            <h3>Overall Attendance Summary</h3>
+
+            <div class="attendance-cards">
+
+                <div class="attendance-card total-card">
+                    <h4>Total Records</h4>
+                    <p id="overallTotalRecords">0</p>
+                </div>
+
+                <div class="attendance-card present-card">
+                    <h4>Total Present</h4>
+                    <p id="overallPresent">0</p>
+                </div>
+
+                <div class="attendance-card absent-card">
+                    <h4>Total Absent</h4>
+                    <p id="overallAbsent">0</p>
+                </div>
+
+                <div class="attendance-card late-card">
+                    <h4>Total Late</h4>
+                    <p id="overallLate">0</p>
+                </div>
+
+            </div>
+
+            <div class="attendance-percentage-summary">
+                <h4>Overall Attendance Percentage</h4>
+                <p id="overallAttendancePercentage">0%</p>
+            </div>
+        </section>
+
+        <!-- Student-wise Attendance Overview -->
+        <section class="dashboard-section">
+            <h3>Student-wise Attendance Overview</h3>
+
+            <table class="subject-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Total Classes</th>
+                        <th>Present</th>
+                        <th>Absent</th>
+                        <th>Late</th>
+                        <th>Attendance %</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentAttendanceOverview"></tbody>
+            </table>
+        </section>
+
+        <!-- Low Attendance Alert -->
+        <section class="dashboard-section">
+            <h3>Low Attendance Alert</h3>
+
+            <p>
+                Students with attendance below 75% require attention.
+            </p>
+
+            <table class="subject-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Total Classes</th>
+                        <th>Present</th>
+                        <th>Absent</th>
+                        <th>Late</th>
+                        <th>Attendance %</th>
+                        <th>Alert</th>
+                    </tr>
+                </thead>
+
+                <tbody id="lowAttendanceBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Attendance Status Chart -->
+        <section class="dashboard-section">
+            <h3>Attendance Status Overview</h3>
+
+            <p>
+                Visual overview of Present, Absent and Late attendance records.
+            </p>
+
+            <div class="attendance-chart-container">
+                <canvas id="attendanceStatusChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Faculty Options -->
+        <section class="dashboard-section">
+            <h3>Faculty Options</h3>
+
+            <div class="faculty-options">
+                <a href="students.html">Student Records</a>
+                <a href="attendance.html">Mark Attendance</a>
+                <a href="reports.html">View Reports</a>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-section">
+            <h3>Quick Actions</h3>
+
+            <div class="faculty-quick-actions">
+
+                <a href="students.html" class="faculty-action-card">
+                    <h4>Manage Students</h4>
+                    <p>Add, view and manage student records.</p>
+                </a>
+
+                <a href="attendance.html" class="faculty-action-card">
+                    <h4>Mark Attendance</h4>
+                    <p>Record student attendance for classes.</p>
+                </a>
+
+                <a href="reports.html" class="faculty-action-card">
+                    <h4>View Reports</h4>
+                    <p>Check student attendance reports.</p>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Smart Attendance Dashboard</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

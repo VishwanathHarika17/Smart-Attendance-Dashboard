@@ -1,0 +1,975 @@
+/* =========================================================
+   SMART ATTENDANCE DASHBOARD - MAIN STYLESHEET
+   ========================================================= */
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f5f9;
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header {
+    background-color: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 25px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+header p {
+    margin-top: 10px;
+    color: #dbeafe;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+nav {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    margin: 0;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: #2563eb;
+    text-decoration: none;
+}
+
+
+/* Student Navigation */
+
+.student-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.student-nav a {
+    padding: 10px 18px;
+    margin: 0;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.student-nav a:hover {
+    background-color: #374151;
+    text-decoration: none;
+}
+
+.student-nav a.active {
+    background-color: #2563eb;
+    text-decoration: none;
+}
+
+
+/* Faculty Navigation */
+
+.faculty-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.faculty-nav a {
+    padding: 10px 18px;
+    margin: 0;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.faculty-nav a:hover {
+    background-color: #2563eb;
+}
+
+.faculty-nav a.active {
+    background-color: #2563eb;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+main {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+main h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 17px;
+    color: #64748b;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button {
+    width: 200px;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #2563eb;
+    color: white;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background-color: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+}
+
+footer p {
+    color: white;
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   LOGIN PAGE
+   ========================================================= */
+
+.login-container {
+    width: 350px;
+    max-width: 90%;
+    margin: 40px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.login-container h2 {
+    margin-bottom: 25px;
+    color: #1e3a8a;
+}
+
+.login-container label {
+    display: block;
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 11px;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+
+/* =========================================================
+   DASHBOARD SECTIONS
+   ========================================================= */
+
+.dashboard-section {
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 25px auto;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #1e3a8a;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    overflow: hidden;
+}
+
+th,
+td {
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #1e3a8a;
+    color: white;
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+/* =========================================================
+   STUDENT RECORDS FORM
+   ========================================================= */
+
+form {
+    text-align: left;
+}
+
+form label {
+    font-weight: bold;
+    color: #374151;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="tel"] {
+    width: 300px;
+    padding: 9px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+
+/* Student Form */
+
+.student-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #374151;
+}
+
+.form-group input {
+    width: 100% !important;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.student-form button {
+    grid-column: span 2;
+    justify-self: center;
+    margin-top: 10px;
+}
+
+
+/* =========================================================
+   STUDENT SEARCH
+   ========================================================= */
+
+.student-search {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#studentSearch {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+#studentSearch:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+#searchStudentButton,
+#clearSearchButton {
+    width: auto;
+    padding: 10px 18px;
+}
+
+#clearSearchButton {
+    background-color: #64748b;
+}
+
+#clearSearchButton:hover {
+    background-color: #475569;
+}
+
+
+/* =========================================================
+   STUDENT ACTION BUTTONS
+   ========================================================= */
+
+.edit-btn {
+    width: auto;
+    padding: 8px 12px;
+    margin-right: 8px;
+    background-color: #f59e0b;
+}
+
+.edit-btn:hover {
+    background-color: #d97706;
+}
+
+.delete-btn {
+    width: auto;
+    padding: 8px 12px;
+    background-color: #dc2626;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+
+/* =========================================================
+   ATTENDANCE PAGE
+   ========================================================= */
+
+select {
+    padding: 9px;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+input[type="date"] {
+    padding: 9px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+input[type="time"] {
+    padding: 7px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   ATTENDANCE CARDS
+   ========================================================= */
+
+.attendance-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+    align-items: stretch;
+}
+
+.attendance-card {
+    min-height: 140px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.attendance-card h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 17px;
+}
+
+.attendance-card p {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #1f2937;
+}
+
+.attendance-percentage {
+    background-color: #e8f5e9;
+}
+
+
+/* Faculty Attendance Cards */
+
+.total-card {
+    border-top: 5px solid #2563eb;
+}
+
+.present-card {
+    background-color: #d1fae5;
+    border-top: 5px solid #16a34a;
+}
+
+.absent-card {
+    background-color: #fee2e2;
+    border-top: 5px solid #dc2626;
+}
+
+.late-card {
+    background-color: #fef3c7;
+    border-top: 5px solid #f59e0b;
+}
+
+
+/* =========================================================
+   STUDENT WELCOME SECTION
+   ========================================================= */
+
+.welcome-section {
+    background-color: white;
+    width: 100%;
+    margin: 25px auto;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: left;
+    border-left: 5px solid #2563eb;
+    border-top: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-section h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.welcome-section p {
+    font-size: 18px;
+}
+
+.welcome-message {
+    color: #64748b;
+    font-size: 16px !important;
+}
+
+
+/* =========================================================
+   STUDENT PROFILE
+   ========================================================= */
+
+.profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.profile-item {
+    width: auto;
+    padding: 15px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.profile-item strong {
+    font-size: 15px;
+    color: #64748b;
+}
+
+.profile-item p {
+    margin-bottom: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   SUBJECT-WISE ATTENDANCE TABLE
+   ========================================================= */
+
+.subject-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.subject-table th {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.subject-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.subject-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.subject-table td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.quick-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.quick-actions button {
+    width: 220px;
+}
+
+.quick-actions a {
+    text-decoration: none;
+}
+
+.quick-action {
+    display: inline-block;
+    width: 200px;
+    padding: 12px;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.quick-action:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   FACULTY OPTIONS
+   ========================================================= */
+
+.faculty-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.faculty-options a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 55px;
+    padding: 15px;
+    background-color: #f8fafc;
+    color: #1f2937;
+    text-decoration: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.faculty-options a:hover {
+    background-color: #eff6ff;
+    border-color: #2563eb;
+    color: #1e3a8a;
+}
+
+
+/* =========================================================
+   FACULTY QUICK ACTION CARDS
+   ========================================================= */
+
+.faculty-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.faculty-action-card {
+    display: block;
+    padding: 25px;
+    min-height: 140px;
+    background-color: #f8fafc;
+    color: #1f2937;
+    text-decoration: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.faculty-action-card h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.faculty-action-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.faculty-action-card:hover {
+    transform: translateY(-4px);
+    border-color: #2563eb;
+    background-color: #eff6ff;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   REPORT STATUS
+   ========================================================= */
+
+.report-status {
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #1f2937;
+}
+
+.report-status p {
+    margin: 0;
+    color: #1f2937;
+    display: block;
+}
+
+
+/* Excellent Attendance */
+
+.excellent-status {
+    background-color: #d1fae5;
+    border-left: 5px solid #16a34a;
+}
+
+
+/* Good Attendance */
+
+.good-status {
+    background-color: #dbeafe;
+    border-left: 5px solid #2563eb;
+}
+
+
+/* Needs Improvement */
+
+.low-status {
+    background-color: #fee2e2;
+    border-left: 5px solid #dc2626;
+}
+
+
+/* =========================================================
+   ATTENDANCE STATUS COLORS
+   ========================================================= */
+
+.status {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.present {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.absent {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.late {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+
+/* =========================================================
+   ATTENDANCE CHART
+   ========================================================= */
+
+.attendance-chart-container {
+    width: 100%;
+    overflow-x: auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.attendance-chart-container canvas {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+/* Tablets */
+
+@media (max-width: 900px) {
+
+    main {
+        padding: 30px 15px;
+    }
+
+    .attendance-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .faculty-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .faculty-quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 20px 10px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    nav a {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    main {
+        padding: 25px 10px;
+    }
+
+    main h2 {
+        font-size: 24px;
+    }
+
+    .dashboard-section {
+        padding: 18px;
+        margin: 18px auto;
+    }
+
+    .attendance-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .faculty-options {
+        grid-template-columns: 1fr;
+    }
+
+    .faculty-quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .student-form {
+        grid-template-columns: 1fr;
+    }
+
+    .student-form button {
+        grid-column: span 1;
+    }
+
+    .profile-details {
+        grid-template-columns: 1fr;
+    }
+
+    .student-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #studentSearch {
+        width: 100%;
+    }
+
+    #searchStudentButton,
+    #clearSearchButton {
+        width: 100%;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="number"],
+    form input[type="tel"] {
+        width: 100%;
+    }
+
+    .login-container {
+        width: auto;
+        margin: 25px 15px;
+    }
+
+    /* Allow wide tables to scroll on mobile */
+
+    .dashboard-section {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 650px;
+    }
+
+    .subject-table {
+        min-width: 650px;
+    }
+
+    .quick-actions {
+        flex-direction: column;
+    }
+
+    .quick-actions button,
+    .quick-action {
+        width: 100%;
+    }
+}
+/* Edit Attendance Button */
+.edit-attendance-btn {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Delete Attendance Button */
+.delete-attendance-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Hover Effects */
+.edit-attendance-btn:hover {
+    background-color: darkorange;
+}
+
+.delete-attendance-btn:hover {
+    background-color: darkred;
+}
+.edit-attendance-btn,
+.delete-attendance-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}

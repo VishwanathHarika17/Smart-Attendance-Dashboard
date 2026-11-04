@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Reports</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>Smart Attendance Dashboard</h1>
+
+
+        <nav class="student-nav">
+
+            <a href="student-dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="my-attendance.html">
+                My Attendance
+            </a>
+
+            <a href="my-reports.html"
+               class="active">
+                My Reports
+            </a>
+
+            <a href="index.html">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main>
+
+
+        <!-- PAGE TITLE -->
+
+        <div class="welcome-section">
+
+            <h2>My Attendance Report</h2>
+
+            <p class="welcome-message">
+
+                View your overall attendance performance.
+
+            </p>
+
+        </div>
+
+
+        <!-- REPORT SUMMARY -->
+
+        <div class="attendance-cards">
+
+
+            <!-- TOTAL CLASSES -->
+
+            <div class="attendance-card total-card">
+
+                <h4>Total Classes</h4>
+
+                <p id="reportTotal">
+                    0
+                </p>
+
+            </div>
+
+
+            <!-- PRESENT -->
+
+            <div class="attendance-card present-card">
+
+                <h4>Present</h4>
+
+                <p id="reportPresent">
+                    0
+                </p>
+
+            </div>
+
+
+            <!-- ABSENT -->
+
+            <div class="attendance-card absent-card">
+
+                <h4>Absent</h4>
+
+                <p id="reportAbsent">
+                    0
+                </p>
+
+            </div>
+
+
+            <!-- LATE -->
+
+            <div class="attendance-card late-card">
+
+                <h4>Late</h4>
+
+                <p id="reportLate">
+                    0
+                </p>
+
+            </div>
+
+
+            <!-- ATTENDANCE PERCENTAGE -->
+
+            <div class="attendance-card percentage-card">
+
+                <h4>Attendance Percentage</h4>
+
+                <p id="reportPercentage">
+                    0%
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ATTENDANCE INFORMATION -->
+
+        <div class="dashboard-section">
+
+            <h3>Attendance Performance</h3>
+
+
+            <p>
+
+                Your attendance percentage is calculated based on
+                Present and Late attendance records.
+
+            </p>
+
+
+            <p>
+
+                Try to maintain at least
+                <strong>75% attendance</strong>
+                for good academic performance.
+
+            </p>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            Smart Attendance Dashboard
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Attendance</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+        <h1>Smart Attendance Dashboard</h1>
+
+        <nav class="student-nav">
+
+            <a href="student-dashboard.html">Dashboard</a>
+
+            <a href="my-attendance.html" class="active">
+                My Attendance
+            </a>
+
+            <a href="my-reports.html">My Reports</a>
+
+            <a href="index.html">Logout</a>
+
+        </nav>
+
+    </header>
+
+
+    <main>
+
+        <div class="welcome-section">
+
+            <h2>My Attendance</h2>
+
+            <p>
+                View your attendance details here.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-section">
+
+            <h3>Attendance Details</h3>
+
+            <table class="subject-table">
+
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+
+                <tbody id="myAttendanceDetails">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>Smart Attendance Dashboard</p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

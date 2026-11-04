@@ -1,0 +1,14 @@
+# VS Code settings
+.vscode/
+
+# Backup project folder
+zipfileWT/
+
+# Windows files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.log
