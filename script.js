@@ -97,6 +97,80 @@ function getStudents() {
     return savedStudents;
 }
 
+ // ==========================================
+ // CONVERT OLD ATTENDANCE RECORDS
+ // ==========================================
+
+(function () {
+
+    let history = JSON.parse(
+        localStorage.getItem("attendanceHistory") || "[]"
+    );
+
+    let students = getStudents();
+    let changed = false;
+
+    history.forEach(function (record) {
+
+        if (Array.isArray(record.students)) {
+            return;
+        }
+
+        let convertedStudents = [];
+
+        for (let i = 1; i <= 3; i++) {
+
+            let oldStudent = record["student" + i];
+
+            if (!oldStudent) {
+                continue;
+            }
+
+            let matchingStudent = students.find(function (student) {
+                return String(student.name).trim().toLowerCase() ===
+                    String(oldStudent.name).trim().toLowerCase();
+            });
+
+            let studentInfo = matchingStudent || students[i - 1];
+
+            convertedStudents.push({
+
+                id: studentInfo ? String(studentInfo.id) : String(i),
+
+                name: oldStudent.name ||
+                    (studentInfo ? studentInfo.name : "Unknown"),
+
+                status: String(oldStudent.status || "")
+                    .toLowerCase()
+                    .replace(/^./, function (letter) {
+                        return letter.toUpperCase();
+                    }),
+
+                time: oldStudent.time || record.time || "-"
+
+            });
+
+        }
+
+        record.students = convertedStudents;
+        changed = true;
+
+    });
+
+    if (changed) {
+
+        localStorage.setItem(
+            "attendanceHistory",
+            JSON.stringify(history)
+        );
+
+        console.log("Old attendance records converted:", history.length);
+
+    }
+
+})();
+
+
 
 // ==========================================
 // SAVE STUDENTS
@@ -1975,6 +2049,7 @@ if (savedStudentId && totalClassesElement) {
 
 }
 
+
 // ==========================================
 // MY ATTENDANCE
 // ==========================================
@@ -2013,9 +2088,7 @@ if (myAttendanceDetails) {
         function (attendanceData) {
 
             if (!attendanceData.students) {
-
                 return;
-
             }
 
 
@@ -2034,6 +2107,19 @@ if (myAttendanceDetails) {
 
             if (student) {
 
+                let statusClass = "";
+
+                if (student.status === "Present") {
+                    statusClass = "status-present";
+                }
+                else if (student.status === "Absent") {
+                    statusClass = "status-absent";
+                }
+                else if (student.status === "Late") {
+                    statusClass = "status-late";
+                }
+
+
                 myAttendanceDetails.innerHTML += `
 
                     <tr>
@@ -2047,7 +2133,9 @@ if (myAttendanceDetails) {
                         </td>
 
                         <td>
-                            ${student.status}
+                            <span class="attendance-status ${statusClass}">
+                                ${student.status}
+                            </span>
                         </td>
 
                         <td>
@@ -2059,8 +2147,7 @@ if (myAttendanceDetails) {
                 `;
 
 
-                recordsFound =
-                    true;
+                recordsFound = true;
 
             }
 
@@ -2075,9 +2162,7 @@ if (myAttendanceDetails) {
             <tr>
 
                 <td colspan="4">
-
                     No attendance records found
-
                 </td>
 
             </tr>
@@ -2087,6 +2172,7 @@ if (myAttendanceDetails) {
     }
 
 }
+
 
 // ==========================================
 // MY REPORTS
@@ -2201,143 +2287,263 @@ if (reportTotal) {
 }
 
 // ==========================================
+// FIX OLD AND NEW ATTENDANCE DATA FORMATS
+// ==========================================
+
+(function () {
+
+    let attendanceHistory = JSON.parse(
+        localStorage.getItem("attendanceHistory") || "[]"
+    );
+
+    let students = getStudents();
+
+    let dataChanged = false;
+
+    attendanceHistory.forEach(function (record) {
+
+        // Convert old format into the new students array
+        if (!Array.isArray(record.students)) {
+
+            let studentRecords = [];
+
+            Object.keys(record).forEach(function (key) {
+
+                if (/^student\d+$/.test(key)) {
+
+                    let oldStudent = record[key];
+
+                    if (!oldStudent || typeof oldStudent !== "object") {
+                        return;
+                    }
+
+                    // Find the matching student by name
+                    let matchingStudent = students.find(function (student) {
+                        return String(student.name).toLowerCase() ===
+                            String(oldStudent.name).toLowerCase();
+                    });
+
+                    // Use student number as fallback
+                    let studentNumber = Number(key.replace("student", ""));
+
+                    let studentInfo =
+                        matchingStudent || students[studentNumber - 1];
+
+                    let status = String(
+                        oldStudent.status || ""
+                    ).toLowerCase();
+
+                    if (status === "present") {
+                        status = "Present";
+                    } else if (status === "absent") {
+                        status = "Absent";
+                    } else if (status === "late") {
+                        status = "Late";
+                    }
+
+                    studentRecords.push({
+
+                        id: studentInfo
+                            ? studentInfo.id
+                            : "",
+
+                        name: oldStudent.name ||
+                            (studentInfo ? studentInfo.name : "Unknown"),
+
+                        status: status,
+
+                        time: oldStudent.time ||
+                            record.time || "-"
+
+                    });
+
+                }
+
+            });
+
+            record.students = studentRecords;
+
+            dataChanged = true;
+
+        }
+
+        // Make existing statuses consistent
+        if (Array.isArray(record.students)) {
+
+            record.students.forEach(function (student) {
+
+                let status = String(
+                    student.status || ""
+                ).toLowerCase();
+
+                if (status === "present") {
+                    student.status = "Present";
+                    dataChanged = true;
+                } else if (status === "absent") {
+                    student.status = "Absent";
+                    dataChanged = true;
+                } else if (status === "late") {
+                    student.status = "Late";
+                    dataChanged = true;
+                }
+
+            });
+
+        }
+
+    });
+
+    // Save converted records without deleting existing information
+    if (dataChanged) {
+
+        localStorage.setItem(
+            "attendanceHistory",
+            JSON.stringify(attendanceHistory)
+        );
+
+        console.log("Attendance history format corrected successfully!");
+
+    }
+
+})();
+
+// ==========================================
+// FIX OLD ATTENDANCE DATA FORMAT
+// ==========================================
+
+(function () {
+
+    let attendanceHistory = JSON.parse(
+        localStorage.getItem("attendanceHistory") || "[]"
+    );
+
+    let students = JSON.parse(
+        localStorage.getItem("students") || "[]"
+    );
+
+    let updatedHistory = attendanceHistory.map(function (record) {
+
+        // Already in the new format
+        if (Array.isArray(record.students)) {
+            return record;
+        }
+
+        let convertedStudents = [];
+
+        // Convert student1, student2, student3 into an array
+        for (let i = 1; i <= 3; i++) {
+
+            let oldStudent = record["student" + i];
+
+            if (!oldStudent) continue;
+
+            let matchingStudent = students.find(function (student) {
+                return student.name === oldStudent.name;
+            });
+
+            if (!matchingStudent) continue;
+
+            convertedStudents.push({
+
+                id: String(matchingStudent.id),
+                name: oldStudent.name,
+
+                status: String(oldStudent.status).toLowerCase()
+                    .replace(/^./, function (letter) {
+                        return letter.toUpperCase();
+                    }),
+
+                time: oldStudent.time || record.time || "-"
+
+            });
+
+        }
+
+        return {
+            date: record.date,
+            subject: record.subject,
+            time: record.time || "-",
+            students: convertedStudents
+        };
+
+    });
+
+    localStorage.setItem(
+        "attendanceHistory",
+        JSON.stringify(updatedHistory)
+    );
+
+})();
+
+
+// ==========================================
 // DYNAMIC FACULTY DASHBOARD
 // ==========================================
 
-let facultyTotalStudents =
-    document.getElementById(
-        "facultyTotalStudents"
+(function () {
+
+    let attendanceHistory = JSON.parse(
+        localStorage.getItem("attendanceHistory") || "[]"
     );
 
+    let students = JSON.parse(
+        localStorage.getItem("students") || "[]"
+    );
 
-if (facultyTotalStudents) {
+    let updatedHistory = attendanceHistory.map(function (record) {
 
-    let students =
-        getStudents();
+        // Already in the new format
+        if (Array.isArray(record.students)) {
+            return record;
+        }
 
+        let convertedStudents = [];
 
-    let attendanceHistory =
-        JSON.parse(
-            localStorage.getItem(
-                "attendanceHistory"
-            )
-        ) || [];
+        // Convert student1, student2, student3 into an array
+        for (let i = 1; i <= 3; i++) {
 
+            let oldStudent = record["student" + i];
 
-    let presentToday = 0;
-    let absentToday = 0;
-    let lateToday = 0;
+            if (!oldStudent) continue;
 
+            let matchingStudent = students.find(function (student) {
+                return student.name === oldStudent.name;
+            });
 
-    let now = new Date();
+            if (!matchingStudent) continue;
 
-    let today =
-               now.getFullYear() + "-" +
-               String(now.getMonth() + 1).padStart(2, "0") + "-" +
-               String(now.getDate()).padStart(2, "0");
+            convertedStudents.push({
 
+                id: String(matchingStudent.id),
+                name: oldStudent.name,
 
-    attendanceHistory.forEach(
-        function (attendanceData) {
+                status: String(oldStudent.status).toLowerCase()
+                    .replace(/^./, function (letter) {
+                        return letter.toUpperCase();
+                    }),
 
-            if (
+                time: oldStudent.time || record.time || "-"
 
-                attendanceData.date === today &&
-                attendanceData.students
-
-            ) {
-
-                attendanceData.students.forEach(
-                    function (student) {
-
-                        let status =
-                            student.status
-                                .toLowerCase();
-
-
-                        if (
-                            status === "present"
-                        ) {
-
-                            presentToday++;
-
-                        }
-
-                        else if (
-                            status === "absent"
-                        ) {
-
-                            absentToday++;
-
-                        }
-
-                        else if (
-                            status === "late"
-                        ) {
-
-                            lateToday++;
-
-                        }
-
-                    }
-                );
-
-            }
+            });
 
         }
+
+        return {
+            date: record.date,
+            subject: record.subject,
+            time: record.time || "-",
+            students: convertedStudents
+        };
+
+    });
+
+    localStorage.setItem(
+        "attendanceHistory",
+        JSON.stringify(updatedHistory)
     );
 
+})();
 
-    document
-        .getElementById(
-            "facultyTotalStudents"
-        )
-        .textContent =
-        students.length;
-
-
-    let facultyPresent =
-        document.getElementById(
-            "facultyPresentToday"
-        );
-
-
-    if (facultyPresent) {
-
-        facultyPresent.textContent =
-            presentToday;
-
-    }
-
-
-    let facultyAbsent =
-        document.getElementById(
-            "facultyAbsentToday"
-        );
-
-
-    if (facultyAbsent) {
-
-        facultyAbsent.textContent =
-            absentToday;
-
-    }
-
-
-    let facultyLate =
-        document.getElementById(
-            "facultyLateToday"
-        );
-
-
-    if (facultyLate) {
-
-        facultyLate.textContent =
-            lateToday;
-
-    }
-
-}
 
 
 // ==========================================
@@ -3462,3 +3668,1358 @@ function displaySavedAttendance() {
 if (savedAttendanceBody) {
     displaySavedAttendance();
 }
+
+// ==========================================
+// LEAVE REQUEST MANAGEMENT
+// ==========================================
+
+(function () {
+
+    // Get saved leave requests
+    function getLeaveRequests() {
+        return JSON.parse(localStorage.getItem("leaveRequests")) || [];
+    }
+
+    // Save leave requests
+    function saveLeaveRequests(requests) {
+        localStorage.setItem("leaveRequests", JSON.stringify(requests));
+    }
+
+    // Display student's leave requests
+    function displayStudentLeaveRequests() {
+
+        const list = document.getElementById("studentLeaveRequestList");
+
+        if (!list) return;
+
+        const studentId = localStorage.getItem("studentId");
+
+        const requests = getLeaveRequests().filter(
+            request => String(request.studentId) === String(studentId)
+        );
+
+        if (requests.length === 0) {
+            list.innerHTML = "<p>No leave requests submitted yet.</p>";
+            return;
+        }
+
+        list.innerHTML = requests.map(request => `
+            <div class="request-card">
+                <p><strong>Leave Dates:</strong> ${request.startDate} to ${request.endDate}</p>
+                <p><strong>Reason:</strong> ${request.reason}</p>
+                <p><strong>Status:</strong>
+                    <span class="request-status status-${request.status.toLowerCase()}">
+                        ${request.status}
+                    </span>
+                </p>
+                <p><strong>Faculty Response:</strong>
+                    ${request.facultyResponse || "Waiting for faculty response"}
+                </p>
+                <p><strong>Submitted:</strong> ${request.submittedOn}</p>
+            </div>
+        `).join("");
+    }
+
+    // Student submits leave request
+    const leaveForm = document.getElementById("leaveRequestForm");
+
+    if (leaveForm) {
+
+        leaveForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const studentId = localStorage.getItem("studentId");
+            const students = JSON.parse(localStorage.getItem("students")) || [];
+
+            const student = students.find(
+                item => String(item.id) === String(studentId)
+            );
+
+            if (!studentId || !student) {
+                alert("Please log in as a student before submitting a request.");
+                return;
+            }
+
+            const startDate = document.getElementById("leaveStartDate").value;
+            const endDate = document.getElementById("leaveEndDate").value;
+            const reason = document.getElementById("leaveReason").value.trim();
+
+            if (endDate < startDate) {
+                alert("End date cannot be earlier than start date.");
+                return;
+            }
+
+            const requests = getLeaveRequests();
+
+            requests.push({
+                id: Date.now().toString(),
+                studentId: studentId,
+                studentName: student.name,
+                startDate: startDate,
+                endDate: endDate,
+                reason: reason,
+                status: "Pending",
+                facultyResponse: "",
+                submittedOn: new Date().toLocaleString()
+            });
+
+            saveLeaveRequests(requests);
+
+            document.getElementById("leaveRequestMessage").textContent =
+                "Leave request submitted successfully!";
+
+            leaveForm.reset();
+
+            displayStudentLeaveRequests();
+        });
+    }
+
+    // Display all leave requests on faculty dashboard
+    function displayFacultyLeaveRequests() {
+
+        const list = document.getElementById("facultyLeaveRequestList");
+
+        if (!list) return;
+
+        const requests = getLeaveRequests();
+
+        const total = requests.length;
+        const pending = requests.filter(r => r.status === "Pending").length;
+        const approved = requests.filter(r => r.status === "Approved").length;
+        const rejected = requests.filter(r => r.status === "Rejected").length;
+
+        document.getElementById("totalLeaveRequests").textContent = total;
+        document.getElementById("pendingLeaveRequests").textContent = pending;
+        document.getElementById("approvedLeaveRequests").textContent = approved;
+        document.getElementById("rejectedLeaveRequests").textContent = rejected;
+
+        if (requests.length === 0) {
+            list.innerHTML = "<p>No leave requests available.</p>";
+            return;
+        }
+
+        list.innerHTML = requests.map(request => `
+            <div class="request-card">
+
+                <p><strong>Student:</strong> ${request.studentName}</p>
+                <p><strong>Student ID:</strong> ${request.studentId}</p>
+                <p><strong>Leave Dates:</strong> ${request.startDate} to ${request.endDate}</p>
+                <p><strong>Reason:</strong> ${request.reason}</p>
+                <p><strong>Status:</strong> ${request.status}</p>
+
+                <p><strong>Faculty Response:</strong>
+                    ${request.facultyResponse || "No response yet"}
+                </p>
+
+                ${request.status === "Pending" ? `
+                    <button class="approve-request"
+                        onclick="updateLeaveRequest('${request.id}', 'Approved')">
+                        Approve
+                    </button>
+
+                    <button class="reject-request"
+                        onclick="updateLeaveRequest('${request.id}', 'Rejected')">
+                        Reject
+                    </button>
+                ` : ""}
+
+            </div>
+        `).join("");
+    }
+
+    // Make functions available to faculty buttons
+    window.updateLeaveRequest = function (id, status) {
+
+        const response = prompt("Enter your response to the student:");
+
+        if (response === null) return;
+
+        const requests = getLeaveRequests();
+
+        const request = requests.find(item => item.id === id);
+
+        if (!request) return;
+
+        request.status = status;
+        request.facultyResponse = response.trim() || "No additional comments.";
+
+        saveLeaveRequests(requests);
+
+        displayFacultyLeaveRequests();
+    };
+
+    // Load the correct dashboard information
+    displayStudentLeaveRequests();
+    displayFacultyLeaveRequests();
+
+})();
+// ==========================================
+// ATTENDANCE CORRECTION REQUEST MANAGEMENT
+// ==========================================
+
+(function () {
+
+    // Get saved correction requests
+    function getCorrectionRequests() {
+        return JSON.parse(
+            localStorage.getItem("attendanceCorrectionRequests")
+        ) || [];
+    }
+
+    // Save correction requests
+    function saveCorrectionRequests(requests) {
+        localStorage.setItem(
+            "attendanceCorrectionRequests",
+            JSON.stringify(requests)
+        );
+    }
+
+    // Display correction requests on student dashboard
+    function displayStudentCorrectionRequests() {
+
+        const list = document.getElementById(
+            "studentCorrectionRequestList"
+        );
+
+        if (!list) return;
+
+        const studentId = localStorage.getItem("studentId");
+
+        const requests = getCorrectionRequests().filter(
+            request => String(request.studentId) === String(studentId)
+        );
+
+        if (requests.length === 0) {
+            list.innerHTML = "<p>No attendance correction requests submitted yet.</p>";
+            return;
+        }
+
+        list.innerHTML = requests.map(request => `
+            <div class="request-card">
+
+                <p><strong>Date:</strong> ${request.date}</p>
+                <p><strong>Subject:</strong> ${request.subject}</p>
+                <p><strong>Class Time:</strong> ${request.classTime}</p>
+                <p><strong>Current Status:</strong> ${request.currentStatus}</p>
+                <p><strong>Requested Status:</strong> ${request.requestedStatus}</p>
+                <p><strong>Reason:</strong> ${request.reason}</p>
+
+                <p><strong>Status:</strong>
+                    <span class="request-status status-${request.status.toLowerCase()}">
+                        ${request.status}
+                    </span>
+                </p>
+
+                <p><strong>Faculty Response:</strong>
+                    ${request.facultyResponse || "Waiting for faculty response"}
+                </p>
+
+                <p><strong>Submitted:</strong> ${request.submittedOn}</p>
+
+            </div>
+        `).join("");
+    }
+
+    // Student submits correction request
+    const correctionForm = document.getElementById(
+        "attendanceCorrectionForm"
+    );
+
+    if (correctionForm) {
+
+        correctionForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const studentId = localStorage.getItem("studentId");
+            const students = JSON.parse(
+                localStorage.getItem("students")
+            ) || [];
+
+            const student = students.find(
+                item => String(item.id) === String(studentId)
+            );
+
+            if (!studentId || !student) {
+                alert("Please log in as a student before submitting a request.");
+                return;
+            }
+
+            const date = document.getElementById("correctionDate").value;
+            const subject = document.getElementById("correctionSubject").value;
+            const classTime = document.getElementById("correctionClassTime").value;
+            const currentStatus = document.getElementById("currentAttendanceStatus").value;
+            const requestedStatus = document.getElementById("requestedAttendanceStatus").value;
+            const reason = document.getElementById("correctionReason").value.trim();
+
+            if (currentStatus === requestedStatus) {
+                alert("Please select a different requested attendance status.");
+                return;
+            }
+
+            const requests = getCorrectionRequests();
+
+            requests.push({
+
+                id: Date.now().toString(),
+                studentId: studentId,
+                studentName: student.name,
+                date: date,
+                subject: subject,
+                classTime: classTime,
+                currentStatus: currentStatus,
+                requestedStatus: requestedStatus,
+                reason: reason,
+                status: "Pending",
+                facultyResponse: "",
+                submittedOn: new Date().toLocaleString()
+
+            });
+
+            saveCorrectionRequests(requests);
+
+            document.getElementById("correctionRequestMessage").textContent =
+                "Attendance correction request submitted successfully!";
+
+            correctionForm.reset();
+
+            displayStudentCorrectionRequests();
+
+        });
+    }
+
+    // Display correction requests on faculty dashboard
+    function displayFacultyCorrectionRequests() {
+
+        const list = document.getElementById(
+            "facultyCorrectionRequestList"
+        );
+
+        if (!list) return;
+
+        const requests = getCorrectionRequests();
+
+        if (requests.length === 0) {
+            list.innerHTML = "<p>No attendance correction requests available.</p>";
+            return;
+        }
+
+        list.innerHTML = requests.map(request => `
+
+            <div class="request-card">
+
+                <p><strong>Student:</strong> ${request.studentName}</p>
+                <p><strong>Student ID:</strong> ${request.studentId}</p>
+                <p><strong>Date:</strong> ${request.date}</p>
+                <p><strong>Subject:</strong> ${request.subject}</p>
+                <p><strong>Class Time:</strong> ${request.classTime}</p>
+                <p><strong>Current Status:</strong> ${request.currentStatus}</p>
+                <p><strong>Requested Status:</strong> ${request.requestedStatus}</p>
+                <p><strong>Reason:</strong> ${request.reason}</p>
+                <p><strong>Status:</strong> ${request.status}</p>
+
+                <p><strong>Faculty Response:</strong>
+                    ${request.facultyResponse || "No response yet"}
+                </p>
+
+                ${request.status === "Pending" ? `
+
+                    <button class="approve-request"
+                        onclick="updateAttendanceCorrectionRequest('${request.id}', 'Approved')">
+                        Approve
+                    </button>
+
+                    <button class="reject-request"
+                        onclick="updateAttendanceCorrectionRequest('${request.id}', 'Rejected')">
+                        Reject
+                    </button>
+
+                ` : ""}
+
+            </div>
+
+        `).join("");
+    }
+
+    // Faculty approves or rejects a correction request
+    window.updateAttendanceCorrectionRequest = function (id, status) {
+
+        const response = prompt("Enter your response to the student:");
+
+        if (response === null) return;
+
+        const requests = getCorrectionRequests();
+
+        const request = requests.find(item => item.id === id);
+
+        if (!request || request.status !== "Pending") return;
+
+        // Update original attendance record only when approved
+        if (status === "Approved") {
+
+            const attendanceHistory = JSON.parse(
+                localStorage.getItem("attendanceHistory")
+            ) || [];
+
+            const session = attendanceHistory.find(record =>
+                String(record.date) === String(request.date) &&
+                String(record.subject) === String(request.subject) &&
+                String(record.time) === String(request.classTime)
+            );
+
+            if (!session) {
+                alert("Matching attendance session was not found. Please check the date, subject and class time.");
+                return;
+            }
+
+            const studentRecord = session.students.find(record =>
+                String(record.id) === String(request.studentId)
+            );
+
+            if (!studentRecord) {
+                alert("Student attendance record was not found.");
+                return;
+            }
+
+            if (studentRecord.status !== request.currentStatus) {
+                alert("The current attendance status does not match the original record. Please verify it before approving.");
+                return;
+            }
+
+            studentRecord.status = request.requestedStatus;
+
+            localStorage.setItem(
+                "attendanceHistory",
+                JSON.stringify(attendanceHistory)
+            );
+        }
+
+        request.status = status;
+
+        request.facultyResponse =
+            response.trim() || "No additional comments.";
+
+        saveCorrectionRequests(requests);
+
+        displayFacultyCorrectionRequests();
+
+    };
+
+    // Load correction requests
+    displayStudentCorrectionRequests();
+    displayFacultyCorrectionRequests();
+
+})();
+// ==========================================
+// SMART ATTENDANCE PREDICTION
+// ==========================================
+
+(function () {
+
+    function displayAttendancePrediction() {
+
+        const predictionList = document.getElementById(
+            "attendancePredictionList"
+        );
+
+        if (!predictionList) return;
+
+        const studentId = localStorage.getItem("studentId");
+
+        const attendanceHistory = JSON.parse(
+            localStorage.getItem("attendanceHistory")
+        ) || [];
+
+        if (!studentId) {
+            predictionList.innerHTML =
+                "<p>Please log in to view your attendance prediction.</p>";
+            return;
+        }
+
+        const subjectData = {};
+
+        attendanceHistory.forEach(session => {
+
+            const studentRecord = (session.students || []).find(
+                student => String(student.id) === String(studentId)
+            );
+
+            if (!studentRecord) return;
+
+            const subject = session.subject;
+
+            if (!subjectData[subject]) {
+                subjectData[subject] = {
+                    total: 0,
+                    attended: 0
+                };
+            }
+
+            subjectData[subject].total++;
+
+            if (
+                studentRecord.status === "Present" ||
+                studentRecord.status === "Late"
+            ) {
+                subjectData[subject].attended++;
+            }
+
+        });
+
+        const subjects = Object.keys(subjectData);
+
+        if (subjects.length === 0) {
+            predictionList.innerHTML =
+                "<p>No attendance records available yet.</p>";
+            return;
+        }
+
+        predictionList.innerHTML = subjects.map(subject => {
+
+            const data = subjectData[subject];
+
+            const percentage = Math.round(
+                (data.attended / data.total) * 100
+            );
+
+            const requiredClasses = Math.max(
+                0,
+                Math.ceil(3 * data.total - 4 * data.attended)
+            );
+
+            let status;
+            let statusClass;
+            let prediction;
+
+            if (percentage >= 75) {
+
+                status = "On Track";
+                statusClass = "status-approved";
+
+                prediction = "Your attendance meets the 75% requirement.";
+
+            } else {
+
+                status = "At Risk";
+                statusClass = "status-rejected";
+
+                prediction =
+                    "Attend the next " + requiredClasses +
+                    " consecutive classes to reach 75%.";
+
+            }
+
+            return `
+                <div class="request-card">
+
+                    <h4>${subject}</h4>
+
+                    <p>
+                        <strong>Attendance:</strong>
+                        ${percentage}%
+                    </p>
+
+                    <p>
+                        <strong>Classes Attended:</strong>
+                        ${data.attended} / ${data.total}
+                    </p>
+
+                    <p>
+                        <strong>Prediction:</strong>
+                        <span class="request-status ${statusClass}">
+                            ${status}
+                        </span>
+                    </p>
+
+                    <p>${prediction}</p>
+
+                </div>
+            `;
+
+        }).join("");
+
+    }
+
+    displayAttendancePrediction();
+
+})();
+// ==========================================
+// ATTENDANCE DEFAULTER EARLY WARNING SYSTEM
+// ==========================================
+
+(function () {
+
+    function displayAttendanceDefaulters() {
+
+        const list = document.getElementById(
+            "attendanceDefaulterList"
+        );
+
+        if (!list) return;
+
+        const students = JSON.parse(
+            localStorage.getItem("students")
+        ) || [];
+
+        const attendanceHistory = JSON.parse(
+            localStorage.getItem("attendanceHistory")
+        ) || [];
+
+        if (students.length === 0 || attendanceHistory.length === 0) {
+            list.innerHTML = "<p>No student or attendance records available.</p>";
+            return;
+        }
+
+        const defaulters = students.map(student => {
+
+            let totalClasses = 0;
+            let attendedClasses = 0;
+
+            attendanceHistory.forEach(session => {
+
+                const record = (session.students || []).find(
+                    item => String(item.id) === String(student.id)
+                );
+
+                if (record) {
+
+                    totalClasses++;
+
+                    if (
+                        record.status === "Present" ||
+                        record.status === "Late"
+                    ) {
+                        attendedClasses++;
+                    }
+
+                }
+
+            });
+
+            const percentage = totalClasses > 0
+                ? Math.round((attendedClasses / totalClasses) * 100)
+                : 0;
+
+            let warningLevel;
+            let warningColor;
+
+            if (percentage >= 75) {
+
+                warningLevel = "Safe";
+                warningColor = "#16a34a";
+
+            } else if (percentage >= 60) {
+
+                warningLevel = "Warning";
+                warningColor = "#d97706";
+
+            } else {
+
+                warningLevel = "Critical";
+                warningColor = "#dc2626";
+
+            }
+
+            return {
+                name: student.name,
+                id: student.id,
+                percentage: percentage,
+                totalClasses: totalClasses,
+                attendedClasses: attendedClasses,
+                warningLevel: warningLevel,
+                warningColor: warningColor
+            };
+
+        });
+
+        // Show Critical and Warning students first
+        defaulters.sort((a, b) => a.percentage - b.percentage);
+
+        list.innerHTML = defaulters.map(student => `
+
+            <div class="request-card">
+
+                <h4>${student.name}</h4>
+
+                <p><strong>Student ID:</strong> ${student.id}</p>
+
+                <p>
+                    <strong>Attendance:</strong>
+                    ${student.percentage}%
+                </p>
+
+                <p>
+                    <strong>Classes Attended:</strong>
+                    ${student.attendedClasses} / ${student.totalClasses}
+                </p>
+
+                <p>
+                    <strong>Warning Level:</strong>
+                    <span style="color: ${student.warningColor}; font-weight: bold;">
+                        ${student.warningLevel}
+                    </span>
+                </p>
+
+            </div>
+
+        `).join("");
+
+    }
+
+    displayAttendanceDefaulters();
+
+})();
+
+ // ==========================================
+ // STUDENT ATTENDANCE CALENDAR
+ // ==========================================
+
+(function () {
+
+    const calendar = document.getElementById("attendanceCalendar");
+    const monthHeading = document.getElementById("attendanceCalendarMonth");
+    const details = document.getElementById("selectedDateAttendance");
+
+    if (!calendar || !monthHeading || !details) return;
+
+    let currentDate = new Date();
+    let selectedDate = "";
+
+    const studentId = localStorage.getItem("studentId");
+
+    // Get attendance history
+    function getAttendanceHistory() {
+
+        return JSON.parse(
+            localStorage.getItem("attendanceHistory") || "[]"
+        );
+
+    }
+
+    // Get attendance records for the logged-in student on a date
+    function getStudentRecords(date) {
+
+        const history = getAttendanceHistory();
+
+        const records = [];
+
+        history.forEach(session => {
+
+            const sessionDate = String(session.date || "").slice(0, 10);
+
+            if (sessionDate !== date) return;
+
+            const studentRecord = (session.students || []).find(student =>
+                String(student.id) === String(studentId)
+            );
+
+            if (studentRecord) {
+
+                records.push({
+                    subject: session.subject || "Not specified",
+                    status: studentRecord.status || "Not specified",
+                    time: session.time || studentRecord.time || "Not specified"
+                });
+
+            }
+
+        });
+
+        return records;
+
+    }
+
+    // Display attendance details when a date is clicked
+    function displaySelectedDate(date) {
+
+        selectedDate = date;
+
+        const records = getStudentRecords(date);
+
+        details.innerHTML = "";
+
+        const heading = document.createElement("h4");
+
+        const dateObject = new Date(date + "T00:00:00");
+
+        heading.textContent = "Attendance on " +
+            dateObject.toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+        details.appendChild(heading);
+
+        if (records.length === 0) {
+
+            const message = document.createElement("p");
+
+            message.textContent = "No attendance records for this date.";
+
+            details.appendChild(message);
+
+            return;
+        }
+
+        records.forEach(record => {
+
+            const card = document.createElement("div");
+            card.className = "request-card";
+
+            const subject = document.createElement("p");
+            subject.textContent = "Subject: " + record.subject;
+
+            const time = document.createElement("p");
+            time.textContent = "Class Time: " + record.time;
+
+            const status = document.createElement("p");
+            status.textContent = "Status: " + record.status;
+
+            status.style.fontWeight = "bold";
+
+            if (record.status === "Present") {
+                status.style.color = "#15803d";
+            } else if (record.status === "Absent") {
+                status.style.color = "#dc2626";
+            } else if (record.status === "Late") {
+                status.style.color = "#d97706";
+            }
+
+            card.appendChild(subject);
+            card.appendChild(time);
+            card.appendChild(status);
+
+            details.appendChild(card);
+
+        });
+
+    }
+
+    // Display the monthly calendar
+    function displayCalendar() {
+
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        const firstDay = new Date(year, month, 1).getDay();
+
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        monthHeading.textContent = currentDate.toLocaleString(
+            "default",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+        calendar.innerHTML = "";
+
+        const calendarGrid = document.createElement("div");
+        calendarGrid.className = "calendar-grid";
+
+        // Weekday headings
+        const dayNames = [
+            "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+        ];
+
+        dayNames.forEach(day => {
+
+            const heading = document.createElement("div");
+
+            heading.className = "calendar-weekday";
+            heading.textContent = day;
+
+            calendarGrid.appendChild(heading);
+
+        });
+
+        // Empty spaces before the first date
+        for (let i = 0; i < firstDay; i++) {
+
+            const empty = document.createElement("div");
+
+            empty.className = "calendar-empty";
+
+            calendarGrid.appendChild(empty);
+
+        }
+
+        // Create each date
+        for (let day = 1; day <= totalDays; day++) {
+
+            const date =
+                year + "-" +
+                String(month + 1).padStart(2, "0") + "-" +
+                String(day).padStart(2, "0");
+
+            const records = getStudentRecords(date);
+
+            let status = "No Record";
+
+            if (records.length > 0) {
+
+                const statuses = records.map(record => record.status);
+
+                if (statuses.every(item => item === "Present")) {
+                    status = "Present";
+                } else if (statuses.every(item => item === "Absent")) {
+                    status = "Absent";
+                } else if (statuses.every(item => item === "Late")) {
+                    status = "Late";
+                } else {
+                    status = "Mixed";
+                }
+
+            }
+
+            const dayButton = document.createElement("button");
+
+            dayButton.type = "button";
+            dayButton.className = "calendar-day";
+
+            if (status === "Present") {
+                dayButton.classList.add("calendar-present");
+            } else if (status === "Absent") {
+                dayButton.classList.add("calendar-absent");
+            } else if (status === "Late") {
+                dayButton.classList.add("calendar-late");
+            } else if (status === "Mixed") {
+                dayButton.classList.add("calendar-mixed");
+            } else {
+                dayButton.classList.add("calendar-no-record");
+            }
+
+            if (selectedDate === date) {
+                dayButton.classList.add("calendar-selected");
+            }
+
+            const dayNumber = document.createElement("span");
+            dayNumber.textContent = day;
+
+            const statusLabel = document.createElement("small");
+            statusLabel.textContent = status;
+
+            dayButton.appendChild(dayNumber);
+            dayButton.appendChild(statusLabel);
+
+            dayButton.addEventListener("click", function () {
+
+                displaySelectedDate(date);
+
+                displayCalendar();
+
+            });
+
+            calendarGrid.appendChild(dayButton);
+
+        }
+
+        calendar.appendChild(calendarGrid);
+
+    }
+
+    // Previous month
+    window.changeAttendanceMonth = function (change) {
+
+        currentDate.setDate(1);
+
+        currentDate.setMonth(currentDate.getMonth() + change);
+
+        displayCalendar();
+
+    };
+
+    // Initial display
+    if (!studentId) {
+
+        calendar.textContent =
+            "Please log in to view your attendance calendar.";
+
+        return;
+
+    }
+
+    displayCalendar();
+
+})();
+
+// Smart Attendance Prediction
+
+(function () {
+
+    function calculateAttendancePrediction() {
+
+        const predictionElement = document.getElementById("predictedAttendance");
+        const messageElement = document.getElementById("predictionMessage");
+
+        if (!predictionElement || !messageElement) return;
+
+        const attendanceHistory = JSON.parse(
+            localStorage.getItem("attendanceHistory") || "[]"
+        );
+
+        const studentId = localStorage.getItem("studentId");
+
+        // Get this student's attendance records
+        const studentRecords = [];
+
+        attendanceHistory.forEach(record => {
+
+            const studentRecord = record.students?.find(student =>
+                String(student.id) === String(studentId)
+            );
+
+            if (studentRecord) {
+                studentRecords.push(studentRecord);
+            }
+
+        });
+
+        if (studentRecords.length === 0) {
+            predictionElement.textContent = "--%";
+            messageElement.textContent = "No attendance records available yet.";
+            return;
+        }
+
+        // Use the 10 most recent class records
+        const recentRecords = studentRecords.slice(-10);
+
+        let attendedClasses = 0;
+
+        recentRecords.forEach(record => {
+
+            if (
+                record.status === "Present" ||
+                record.status === "Late"
+            ) {
+                attendedClasses++;
+            }
+
+        });
+
+        // Estimate future attendance using the recent attendance pattern
+        const predictedPercentage = Math.round(
+            (attendedClasses / recentRecords.length) * 100
+        );
+
+        predictionElement.textContent = predictedPercentage + "%";
+
+        if (predictedPercentage >= 75) {
+            messageElement.textContent =
+                "Good progress! Your recent attendance pattern is above 75%. Keep it up.";
+        } else {
+            messageElement.textContent =
+                "Warning! Your recent attendance pattern is below 75%. Try to attend upcoming classes regularly.";
+        }
+
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        calculateAttendancePrediction
+    );
+
+})();
+// Attendance Defaulter Early Warning System
+
+(function () {
+
+    function displayAttendanceWarnings() {
+
+        const warningList = document.getElementById("attendanceWarningList");
+
+        if (!warningList) return;
+
+        const students = JSON.parse(
+            localStorage.getItem("students") || "[]"
+        );
+
+        const attendanceHistory = JSON.parse(
+            localStorage.getItem("attendanceHistory") || "[]"
+        );
+
+        let defaulterCount = 0;
+        let atRiskCount = 0;
+        let safeCount = 0;
+
+        warningList.innerHTML = "";
+
+        students.forEach(student => {
+
+            let totalClasses = 0;
+            let attendedClasses = 0;
+
+            attendanceHistory.forEach(record => {
+
+                const studentRecord = record.students?.find(item =>
+                    String(item.id) === String(student.id)
+                );
+
+                if (studentRecord) {
+
+                    totalClasses++;
+
+                    if (
+                        studentRecord.status === "Present" ||
+                        studentRecord.status === "Late"
+                    ) {
+                        attendedClasses++;
+                    }
+
+                }
+
+            });
+
+            // Skip students without attendance records
+            if (totalClasses === 0) return;
+
+            const percentage = Math.round(
+                (attendedClasses / totalClasses) * 100
+            );
+
+            let category = "";
+            let categoryColor = "";
+
+            if (percentage < 75) {
+
+                defaulterCount++;
+                category = "Defaulter";
+                categoryColor = "#dc2626";
+
+            } else if (percentage <= 80) {
+
+                atRiskCount++;
+                category = "At Risk";
+                categoryColor = "#d97706";
+
+            } else {
+
+                safeCount++;
+                category = "Safe";
+                categoryColor = "#15803d";
+
+            }
+
+            const studentCard = document.createElement("div");
+            studentCard.className = "warning-student";
+
+            const name = document.createElement("h4");
+            name.textContent = student.name;
+
+            const attendance = document.createElement("p");
+            attendance.textContent = "Attendance: " + percentage + "%";
+
+            const status = document.createElement("p");
+            status.textContent = "Status: " + category;
+            status.style.color = categoryColor;
+            status.style.fontWeight = "bold";
+
+            studentCard.appendChild(name);
+            studentCard.appendChild(attendance);
+            studentCard.appendChild(status);
+
+            warningList.appendChild(studentCard);
+
+        });
+
+        document.getElementById("defaulterCount").textContent =
+            defaulterCount;
+
+        document.getElementById("atRiskCount").textContent =
+            atRiskCount;
+
+        document.getElementById("safeCount").textContent =
+            safeCount;
+
+        if (warningList.innerHTML === "") {
+            warningList.textContent =
+                "No attendance records available for students yet.";
+        }
+
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        displayAttendanceWarnings
+    );
+
+})();
+// Subject-wise Performance Comparison
+
+(function () {
+
+    function displaySubjectPerformance() {
+
+        const container = document.getElementById(
+            "subjectPerformanceComparison"
+        );
+
+        if (!container) return;
+
+        const students = JSON.parse(
+            localStorage.getItem("students") || "[]"
+        );
+
+        const attendanceHistory = JSON.parse(
+            localStorage.getItem("attendanceHistory") || "[]"
+        );
+
+        const subjectData = {};
+
+        attendanceHistory.forEach(record => {
+
+            const subject = record.subject;
+
+            if (!subject) return;
+
+            if (!subjectData[subject]) {
+                subjectData[subject] = {
+                    total: 0,
+                    attended: 0
+                };
+            }
+
+            record.students?.forEach(studentRecord => {
+
+                subjectData[subject].total++;
+
+                if (
+                    studentRecord.status === "Present" ||
+                    studentRecord.status === "Late"
+                ) {
+                    subjectData[subject].attended++;
+                }
+
+            });
+
+        });
+
+        container.innerHTML = "";
+
+        const subjects = Object.keys(subjectData);
+
+        if (subjects.length === 0) {
+            container.textContent =
+                "No subject attendance records available yet.";
+            return;
+        }
+
+        subjects.forEach(subject => {
+
+            const data = subjectData[subject];
+
+            const percentage = Math.round(
+                (data.attended / data.total) * 100
+            );
+
+            const card = document.createElement("div");
+            card.className = "subject-performance-card";
+
+            const title = document.createElement("h4");
+            title.textContent = subject;
+
+            const details = document.createElement("p");
+            details.textContent =
+                "Attendance: " + percentage + "%";
+
+            const count = document.createElement("p");
+            count.textContent =
+                "Attended: " + data.attended +
+                " / " + data.total + " classes";
+
+            const progress = document.createElement("div");
+            progress.className = "subject-progress";
+
+            const fill = document.createElement("div");
+            fill.className = "subject-progress-fill";
+            fill.style.width = percentage + "%";
+
+            if (percentage < 75) {
+                fill.style.backgroundColor = "#dc2626";
+            } else if (percentage <= 80) {
+                fill.style.backgroundColor = "#d97706";
+            } else {
+                fill.style.backgroundColor = "#15803d";
+            }
+
+            progress.appendChild(fill);
+
+            card.appendChild(title);
+            card.appendChild(details);
+            card.appendChild(count);
+            card.appendChild(progress);
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        displaySubjectPerformance
+    );
+
+})();
+// ==========================================
+// FACULTY DASHBOARD KPI CARDS
+// ==========================================
+
+(function () {
+
+    let students = getStudents();
+
+    let history = JSON.parse(
+        localStorage.getItem("attendanceHistory") || "[]"
+    );
+
+    let today = new Date().toISOString().split("T")[0];
+
+    let present = 0;
+    let absent = 0;
+    let late = 0;
+
+    history.forEach(function (record) {
+
+        if (record.date !== today) {
+            return;
+        }
+
+        if (!Array.isArray(record.students)) {
+            return;
+        }
+
+        record.students.forEach(function (student) {
+
+            let status = String(student.status).toLowerCase();
+
+            if (status === "present") {
+                present++;
+            }
+            else if (status === "absent") {
+                absent++;
+            }
+            else if (status === "late") {
+                late++;
+            }
+
+        });
+
+    });
+
+    document.getElementById("facultyTotalStudents").textContent =
+        students.length;
+
+    document.getElementById("facultyPresentToday").textContent =
+        present;
+
+    document.getElementById("facultyAbsentToday").textContent =
+        absent;
+
+    document.getElementById("facultyLateToday").textContent =
+        late;
+
+})();

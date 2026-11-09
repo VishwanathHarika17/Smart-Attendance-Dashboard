@@ -1,199 +1,442 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Student Dashboard</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Smart Attendance</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header>
+    <div class="student-layout">
 
-        <h1>Smart Attendance Dashboard</h1>
+        <!-- Sidebar -->
 
-       <nav class="student-nav">
+        <aside class="student-sidebar">
 
-         <a href="student-dashboard.html" class="active">Dashboard</a>
-         <a href="my-attendance.html">My Attendance</a>
-         <a href="my-reports.html">My Reports</a>
-         <a href="index.html">Logout</a>
+            <div class="sidebar-brand">
+                <h2>SA</h2>
+                <h3>Smart Attendance</h3>
+                <p>Management System</p>
+            </div>
 
-      </nav>
+            <p class="sidebar-label">MAIN MENU</p>
 
-    </header>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html" class="active">
+                    ▦ Dashboard
+                </a>
+
+                <a href="my-attendance.html">
+                    ♙ My Attendance
+                </a>
+
+                <a href="my-reports.html">
+                    ▤ My Reports
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="index.html">↪ Logout</a>
+            </div>
+
+        </aside>
 
 
-    <main>
+        <!-- Main Dashboard Area -->
 
-        <div class="welcome-section">
+        <div class="student-main">
 
-         <h2>Student Dashboard</h2>
+            <!-- Top Header -->
 
-    <p>
-        Welcome back, <span id="welcomeName"></span>!
-    </p>
+            <header class="student-topbar">
 
-    <p class="welcome-message">
-        Track your attendance and academic progress in one place.
-    </p>
+                <div>
+                    <p>STUDENT PORTAL</p>
+                    <h1>Dashboard Overview</h1>
+                </div>
 
-       </div>
+                <div class="student-profile">
+                    <div class="student-avatar">S</div>
+                    <div>
+                        <strong id="studentHeaderName">Student</strong>
+                        <p>Student Account</p>
+                    </div>
+                </div>
+
+            </header>
 
 
-       <div class="dashboard-section">
+            <!-- Main Content -->
 
-    <h3>My Profile</h3>
+            <main class="student-content">
 
-    <div class="profile-details">
+                <!-- Welcome Section -->
 
-        <div class="profile-item">
-            <strong>Student ID</strong>
-            <p id="displayId"></p>
-        </div>
+                <section class="welcome-section">
 
-        <div class="profile-item">
-            <strong>Name</strong>
-            <p id="displayName"></p>
-        </div>
+                    <h2>Student Dashboard</h2>
 
-        <div class="profile-item">
-            <strong>Email</strong>
-            <p id="displayEmail"></p>
-        </div>
+                    <p>
+                        Welcome back, <span id="welcomeName"></span>!
+                    </p>
 
-        <div class="profile-item">
-            <strong>Department</strong>
-            <p id="displayDepartment"></p>
-        </div>
+                    <p class="welcome-message">
+                        Track your attendance and academic progress in one place.
+                    </p>
 
-        <div class="profile-item">
-            <strong>Year</strong>
-            <p id="displayYear"></p>
+                </section>
+
+
+                <!-- My Profile -->
+
+                <section class="dashboard-section">
+
+                    <h3>My Profile</h3>
+
+                    <div class="profile-details">
+
+                        <div class="profile-item">
+                            <strong>Student ID</strong>
+                            <p id="displayId"></p>
+                        </div>
+
+                        <div class="profile-item">
+                            <strong>Name</strong>
+                            <p id="displayName"></p>
+                        </div>
+
+                        <div class="profile-item">
+                            <strong>Email</strong>
+                            <p id="displayEmail"></p>
+                        </div>
+
+                        <div class="profile-item">
+                            <strong>Department</strong>
+                            <p id="displayDepartment"></p>
+                        </div>
+
+                        <div class="profile-item">
+                            <strong>Year</strong>
+                            <p id="displayYear"></p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Low Attendance Alert -->
+
+                <section
+                    id="studentLowAttendanceAlert"
+                    class="dashboard-section"
+                    style="display: none; background-color: #fff0f0; border-left: 5px solid #dc2626; color: #991b1b;"
+                >
+
+                    <h3>⚠️ Low Attendance Alert!</h3>
+
+                    <p id="studentLowAttendanceMessage"></p>
+
+                </section>
+
+
+                <!-- My Attendance Overview -->
+
+                <section class="dashboard-section">
+
+                    <h3>My Attendance Overview</h3>
+
+                    <div class="attendance-cards">
+
+                        <div class="attendance-card">
+                            <h4>Total Classes</h4>
+                            <p id="totalClasses"></p>
+                        </div>
+
+                        <div class="attendance-card">
+                            <h4>Present</h4>
+                            <p id="presentClasses"></p>
+                        </div>
+
+                        <div class="attendance-card">
+                            <h4>Absent</h4>
+                            <p id="absentClasses"></p>
+                        </div>
+
+                        <div class="attendance-card">
+                            <h4>Late</h4>
+                            <p id="lateClasses"></p>
+                        </div>
+
+                        <div class="attendance-card attendance-percentage">
+                            <h4>Attendance</h4>
+                            <p id="attendancePercentage"></p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Subject-wise Attendance -->
+
+                <section class="dashboard-section">
+
+                    <h3>Subject-wise Attendance</h3>
+
+                    <table class="subject-table">
+
+                        <tr>
+                            <th>Subject</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Late</th>
+                            <th>Attendance %</th>
+                        </tr>
+
+                        <tr>
+                            <td>Web Technologies</td>
+                            <td id="webTotal"></td>
+                            <td id="webPresent"></td>
+                            <td id="webAbsent"></td>
+                            <td id="webLate"></td>
+                            <td id="webPercentage"></td>
+                        </tr>
+
+                        <tr>
+                            <td>Database Management</td>
+                            <td id="dbTotal"></td>
+                            <td id="dbPresent"></td>
+                            <td id="dbAbsent"></td>
+                            <td id="dbLate"></td>
+                            <td id="dbPercentage"></td>
+                        </tr>
+
+                        <tr>
+                            <td>Computer Networks</td>
+                            <td id="cnTotal"></td>
+                            <td id="cnPresent"></td>
+                            <td id="cnAbsent"></td>
+                            <td id="cnLate"></td>
+                            <td id="cnPercentage"></td>
+                        </tr>
+
+                    </table>
+
+                </section>
+
+
+                <!-- Leave Request Management -->
+
+                <section class="dashboard-section">
+
+                    <h3>Apply for Leave</h3>
+
+                    <form id="leaveRequestForm">
+
+                        <label for="leaveStartDate">Start Date</label>
+                        <input type="date" id="leaveStartDate" required>
+
+                        <label for="leaveEndDate">End Date</label>
+                        <input type="date" id="leaveEndDate" required>
+
+                        <label for="leaveReason">Reason for Leave</label>
+                        <textarea
+                            id="leaveReason"
+                            placeholder="Enter your reason for leave"
+                            required
+                        ></textarea>
+
+                        <button type="submit">Submit Leave Request</button>
+
+                        <p id="leaveRequestMessage"></p>
+
+                    </form>
+
+                    <h3>My Leave Requests</h3>
+
+                    <div id="studentLeaveRequestList">
+                        <p>No leave requests submitted yet.</p>
+                    </div>
+
+                </section>
+
+
+                <!-- Attendance Correction Request -->
+
+                <section class="dashboard-section">
+
+                    <h3>Request Attendance Correction</h3>
+
+                    <form id="attendanceCorrectionForm">
+
+                        <label for="correctionDate">Attendance Date</label>
+                        <input type="date" id="correctionDate" required>
+
+                        <label for="correctionSubject">Subject</label>
+                        <select id="correctionSubject" required>
+                            <option value="">Select Subject</option>
+                            <option value="Web Technologies">Web Technologies</option>
+                            <option value="Database Management">Database Management</option>
+                            <option value="Computer Networks">Computer Networks</option>
+                        </select>
+
+                        <label for="currentAttendanceStatus">Current Attendance Status</label>
+                        <select id="currentAttendanceStatus" required>
+                            <option value="">Select Status</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Late">Late</option>
+                        </select>
+
+                        <label for="correctionClassTime">Class Time</label>
+                        <input type="time" id="correctionClassTime" required>
+
+                        <label for="requestedAttendanceStatus">
+                            Requested Correct Attendance Status
+                        </label>
+
+                        <select id="requestedAttendanceStatus" required>
+                            <option value="">Select Correct Status</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Late">Late</option>
+                        </select>
+
+                        <label for="correctionReason">Reason for Correction</label>
+
+                        <textarea
+                            id="correctionReason"
+                            placeholder="Explain why your attendance needs correction"
+                            required
+                        ></textarea>
+
+                        <button type="submit">Submit Correction Request</button>
+
+                        <p id="correctionRequestMessage"></p>
+
+                    </form>
+
+                    <h3>My Correction Requests</h3>
+
+                    <div id="studentCorrectionRequestList">
+                        <p>No correction requests submitted yet.</p>
+                    </div>
+
+                </section>
+
+
+                <!-- Smart Attendance Prediction -->
+
+                <section class="dashboard-section">
+
+                    <h3>Smart Attendance Prediction</h3>
+
+                    <p>
+                        Check your attendance status and understand your
+                        subject-wise attendance risk.
+                    </p>
+
+                    <div id="attendancePredictionList">
+                        <p>Loading attendance prediction...</p>
+                    </div>
+
+                    <div class="prediction-card">
+
+                        <h4>Predicted Attendance</h4>
+
+                        <h2 id="predictedAttendance">--%</h2>
+
+                        <p id="predictionMessage">
+                            Your attendance prediction will appear here.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Student Attendance Calendar -->
+
+                <section class="dashboard-section">
+
+                    <h3>My Attendance Calendar</h3>
+
+                    <p>View your daily attendance records.</p>
+
+                    <div class="calendar-controls">
+
+                        <button
+                            type="button"
+                            onclick="changeAttendanceMonth(-1)"
+                        >
+                            ❮ Previous
+                        </button>
+
+                        <h4 id="attendanceCalendarMonth"></h4>
+
+                        <button
+                            type="button"
+                            onclick="changeAttendanceMonth(1)"
+                        >
+                            Next ❯
+                        </button>
+
+                    </div>
+
+                    <div id="attendanceCalendar" class="attendance-calendar"></div>
+
+                    <div class="calendar-legend">
+                        <span class="calendar-present">Present</span>
+                        <span class="calendar-absent">Absent</span>
+                        <span class="calendar-late">Late</span>
+                        <span class="calendar-no-record">No Record</span>
+                    </div>
+
+                    <div id="selectedDateAttendance">
+                        Select a date to view attendance details.
+                    </div>
+
+                </section>
+
+
+                <!-- Quick Actions -->
+
+                <section class="dashboard-section">
+
+                    <h3>Quick Actions</h3>
+
+                    <div class="student-quick-actions">
+
+                        <a href="my-attendance.html">
+                            <button type="button">View My Attendance</button>
+                        </a>
+
+                        <a href="my-reports.html">
+                            <button type="button">View My Reports</button>
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+
+            <!-- Footer -->
+
+            <footer class="student-footer">
+                <p>Smart Attendance Dashboard</p>
+            </footer>
+
         </div>
 
     </div>
-
-</div>
-
-
-<!-- Low Attendance Alert -->
-<div
-    id="studentLowAttendanceAlert"
-    class="dashboard-section"
-    style="display: none; background-color: #fff0f0; border-left: 5px solid #dc2626; color: #991b1b;"
->
-    <h3>⚠️ Low Attendance Alert!</h3>
-    <p id="studentLowAttendanceMessage"></p>
-</div>
-
-
-       <div class="dashboard-section">
-
-    <h3>My Attendance Overview</h3>
-
-    <div class="attendance-cards">
-
-        <div class="attendance-card">
-            <h4>Total Classes</h4>
-            <p id="totalClasses"></p>
-        </div>
-
-        <div class="attendance-card">
-            <h4>Present</h4>
-            <p id="presentClasses"></p>
-        </div>
-
-        <div class="attendance-card">
-            <h4>Absent</h4>
-            <p id="absentClasses"></p>
-        </div>
-
-        <div class="attendance-card">
-            <h4>Late</h4>
-            <p id="lateClasses"></p>
-        </div>
-
-        <div class="attendance-card attendance-percentage">
-            <h4>Attendance</h4>
-            <p id="attendancePercentage"></p>
-        </div>
-
-    </div>
-
-</div>
-
-        <div class="dashboard-section">
-
-            <h3>Subject-wise Attendance</h3>
-
-            <table class="subject-table">
-
-                <tr>
-                    <th>Subject</th>
-                    <th>Total Classes</th>
-                    <th>Present</th>
-                    <th>Absent</th>
-                    <th>Late</th>
-                    <th>Attendance %</th>
-                </tr>
-
-                <tr>
-                    <td>Web Technologies</td>
-                    <td id="webTotal"></td>
-                    <td id="webPresent"></td>
-                    <td id="webAbsent"></td>
-                    <td id="webLate"></td>
-                    <td id="webPercentage"></td>
-                </tr>
-                <tr>
-                 <td>Database Management</td>
-                 <td id="dbTotal"></td>
-                 <td id="dbPresent"></td>
-                 <td id="dbAbsent"></td>
-                 <td id="dbLate"></td>
-                 <td id="dbPercentage"></td>
-               </tr>
-
-                <tr>
-                   <td>Computer Networks</td>
-                   <td id="cnTotal"></td>
-                   <td id="cnPresent"></td>
-                   <td id="cnAbsent"></td>
-                   <td id="cnLate"></td>
-                   <td id="cnPercentage"></td>
-                </tr>
-
-            </table>
-
-        </div>
-
-
-      <div class="dashboard-section">
-
-    <h3>Quick Actions</h3>
-
-    <a href="my-attendance.html">
-        <button type="button">View My Attendance</button>
-    </a>
-
-    <br><br>
-
-    <a href="my-reports.html">
-        <button type="button">View My Reports</button>
-    </a>
-
-</div>
-
-    </main>
-
-
-    <footer>
-
-        <p>Smart Attendance Dashboard</p>
-
-    </footer>
 
     <script src="script.js"></script>
 

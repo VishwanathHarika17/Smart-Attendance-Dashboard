@@ -1,49 +1,134 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Faculty Login</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Login | Smart Attendance Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="login-page">
 
-    <header>
-        <h1>Smart Attendance Dashboard</h1>
-    </header>
+    <main class="login-wrapper">
 
-    <main>
+        <!-- Left Branding Section -->
+        <section class="login-brand-section">
 
-        <div class="login-container">
+            <div class="login-brand">
 
-            <h2>Faculty Login</h2>
+                <h1>SMART ATTENDANCE</h1>
 
-            <form>
+                <div class="login-welcome">
 
-                <label for="facultyId">Faculty ID:</label>
+                    <span class="login-tag">FACULTY PORTAL</span>
 
-                <input type="text" id="facultyId" name="facultyId" placeholder="Enter Faculty ID">
+                    <h2>Welcome Back!</h2>
 
-                <br><br>
+                    <p>
+                        Manage your classroom efficiently.
+                        Monitor student attendance, review
+                        academic progress and manage requests
+                        through one simple platform.
+                    </p>
 
-                <label for="password">Password:</label>
+                </div>
 
-                <input type="password" id="facultyPassword" name="facultyPassword" placeholder="Enter Password">
-               
-                <br><br>
+                <div class="login-illustration">
 
-                <button type="button" id="facultyLogin">Login</button>
-            </form>
+                    <div class="illustration-icon">
+                        <span>👩‍🏫</span>
+                    </div>
 
-            <br>
+                    <h3>Teach. Manage. Inspire.</h3>
 
-            <a href="index.html">Back to Home</a>
+                    <p>Making classroom management smarter and easier.</p>
 
-        </div>
+                </div>
+
+            </div>
+
+            <div class="login-brand-footer">
+                Smart Attendance Management System
+            </div>
+
+        </section>
+
+
+        <!-- Right Login Section -->
+        <section class="login-form-section">
+
+            <div class="login-form-container">
+
+                <div class="login-form-heading">
+
+                    <span class="login-small-heading">FACULTY ACCOUNT</span>
+
+                    <h2>Sign In</h2>
+
+                    <p>Enter your faculty credentials to continue.</p>
+
+                </div>
+
+
+                <form id="facultyLoginForm">
+
+                    <div class="login-input-group">
+
+                        <label for="facultyId">Faculty ID</label>
+
+                        <input
+                            type="text"
+                            id="facultyId"
+                            name="facultyId"
+                            placeholder="Enter your Faculty ID"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="login-input-group">
+
+                        <label for="facultyPassword">Password</label>
+
+                        <input
+                            type="password"
+                            id="facultyPassword"
+                            name="facultyPassword"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button type="button" id="facultyLogin" class="login-submit-button">
+                        Sign In
+                    </button>
+
+                </form>
+
+
+                <div class="login-back-link">
+                    <a href="index.html">← Back to Home</a>
+                </div>
+
+
+                <div class="login-bottom-text">
+                    Secure Faculty Login Portal
+                </div>
+
+            </div>
+
+        </section>
 
     </main>
-  <script src="script.js"></script>
+
+
+    <script src="script.js"></script>
+
 </body>
 
 </html>

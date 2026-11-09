@@ -1,262 +1,284 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
-    <title>Student Records</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Records | Smart Attendance Dashboard</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
-    <!-- Header -->
+    <div class="faculty-layout">
 
-    <header>
+        <!-- Sidebar -->
+        <aside class="faculty-sidebar">
 
-        <h1>Smart Attendance Dashboard</h1>
+            <div class="sidebar-brand">
+                <h2>Smart Attendance</h2>
+                <p>Management System</p>
+            </div>
 
-        <nav class="faculty-nav">
+            <p class="sidebar-label">MAIN MENU</p>
 
-            <a href="faculty-dashboard.html">
-                Dashboard
-            </a>
+            <nav class="sidebar-nav">
 
-            <a href="students.html" class="active">
-                Students
-            </a>
+                <a href="faculty-dashboard.html">
+                    <span>▦</span> Dashboard
+                </a>
 
-            <a href="attendance.html">
-                Mark Attendance
-            </a>
+                <a href="students.html" class="active">
+                    <span>♙</span> Students
+                </a>
 
-            <a href="reports.html">
-                Reports
-            </a>
+                <a href="attendance.html">
+                    <span>✓</span> Mark Attendance
+                </a>
 
-            <a href="index.html">
-                Logout
-            </a>
+                <a href="reports.html">
+                    <span>▤</span> Reports
+                </a>
 
-        </nav>
+            </nav>
 
-    </header>
+            <div class="sidebar-footer">
+                <a href="index.html">
+                    <span>↪</span> Logout
+                </a>
+            </div>
+
+        </aside>
 
 
-    <main>
+        <!-- Main Content -->
+        <div class="faculty-main">
 
-        <!-- Page Welcome -->
+            <!-- Top Header -->
+            <header class="faculty-topbar">
 
-        <div class="welcome-section">
+                <div>
+                    <h2>Student Records</h2>
+                    <p>Manage your student information</p>
+                </div>
 
-            <h2>Student Records</h2>
+                <div class="faculty-profile">
+                    <div class="profile-avatar">F</div>
+                    <div>
+                        <strong>Faculty</strong>
+                        <p>Administrator</p>
+                    </div>
+                </div>
 
-            <p>Manage student information and records.</p>
+            </header>
 
-            <p class="welcome-message">
-                View existing students or add a new student to the attendance system.
-            </p>
+
+            <main class="faculty-content">
+
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+
+                    <h2>Student Management</h2>
+
+                    <p>
+                        View existing students or add new students
+                        to the attendance system.
+                    </p>
+
+                </section>
+
+
+                <!-- Search Student -->
+                <section class="dashboard-section student-search-section">
+
+                    <h3>Search Student</h3>
+
+                    <div class="student-search-controls">
+
+                        <input
+                            type="text"
+                            id="studentSearch"
+                            placeholder="Enter Student ID or Name"
+                        >
+
+                        <button type="button" id="searchStudentButton">
+                            Search
+                        </button>
+
+                        <button type="button" id="clearSearchButton">
+                            Clear
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Student Information Table -->
+                <section class="dashboard-section student-records-section">
+
+                    <div class="section-heading">
+                        <div>
+                            <h3>Student Information</h3>
+                            <p>View and manage registered students.</p>
+                        </div>
+                    </div>
+
+                    <div class="student-table-wrapper">
+
+                        <table class="subject-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Phone Number</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <!-- Students loaded dynamically -->
+                            <tbody id="studentTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Add New Student -->
+                <section class="dashboard-section add-student-section">
+
+                    <div class="section-heading">
+                        <div>
+                            <h3>Add New Student</h3>
+                            <p>Enter the student details below.</p>
+                        </div>
+                    </div>
+
+
+                    <form class="student-form" id="studentForm">
+
+                        <div class="form-group">
+
+                            <label for="studentId">Student ID</label>
+
+                            <input
+                                type="text"
+                                id="studentId"
+                                name="studentId"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="name">Student Name</label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">Email</label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="department">Department</label>
+
+                            <input
+                                type="text"
+                                id="department"
+                                name="department"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="year">Year</label>
+
+                            <input
+                                type="number"
+                                id="year"
+                                name="year"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">Phone Number</label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                            >
+
+                        </div>
+
+
+                        <div class="student-form-actions">
+
+                            <button
+                                type="submit"
+                                id="studentSubmitButton"
+                            >
+                                Add Student
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cancelEditButton"
+                                style="display: none;"
+                            >
+                                Cancel Edit
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+            </main>
+
+
+            <!-- Footer -->
+            <footer class="student-footer">
+                <p>Smart Attendance Dashboard © 2026</p>
+            </footer>
 
         </div>
 
+    </div>
 
-        <!-- Search Section -->
-
-        <div class="dashboard-section">
-
-            <h3>Search Student</h3>
-
-            <input
-                type="text"
-                id="studentSearch"
-                placeholder="Enter Student ID or Name"
-            >
-
-            <button type="button" id="searchStudentButton">
-                Search
-            </button>
-
-            <button type="button" id="clearSearchButton">
-                Clear
-            </button>
-
-        </div>
-
-
-        <!-- Student Table -->
-
-        <div class="dashboard-section">
-
-            <h3>Student Information</h3>
-
-            <table class="subject-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Year</th>
-                        <th>Phone Number</th>
-                        <th>Actions</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <!-- Students will be loaded dynamically -->
-
-                <tbody id="studentTableBody">
-
-                </tbody>
-
-
-            </table>
-
-        </div>
-
-
-        <!-- Add Student -->
-
-        <div class="dashboard-section">
-
-            <h3>Add New Student</h3>
-
-
-            <form class="student-form" id="studentForm">
-
-
-                <div class="form-group">
-
-                    <label for="studentId">
-                        Student ID
-                    </label>
-
-                    <input
-                        type="text"
-                        id="studentId"
-                        name="studentId"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Student Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="department">
-                        Department
-                    </label>
-
-                    <input
-                        type="text"
-                        id="department"
-                        name="department"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="year">
-                        Year
-                    </label>
-
-                    <input
-                        type="number"
-                        id="year"
-                        name="year"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="phone">
-                        Phone Number
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    id="studentSubmitButton"
-                >
-                    Add Student
-                </button>
-
-
-                <button
-                    type="button"
-                    id="cancelEditButton"
-                    style="display: none;"
-                >
-                    Cancel Edit
-                </button>
-
-
-            </form>
-
-        </div>
-
-
-    </main>
-
-
-    <footer>
-
-        <p>Smart Attendance Dashboard</p>
-
-    </footer>
-
-
-    <!-- JavaScript -->
 
     <script src="script.js"></script>
 
 </body>
-
 </html>
